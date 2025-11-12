@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   database:
     container_name: sgu-database
@@ -47,7 +45,8 @@ services:
       dockerfile: Dockerfile
       tags: ["client:1.0-sgu"]
       args:
-        API_HOST: localhost  # <-- CAMBIAR DE 'backend' A 'localhost'
+        # CORRECCIÓN 1: Usar 'localhost' para que el navegador local resuelva el host
+        API_HOST: localhost 
         API_PORT: 8000
         API_BASE: /api/usuarios
     ports:
@@ -56,3 +55,10 @@ services:
       - backend
     networks:
       - sgu-net
+
+volumes:
+  sgu-volume:
+
+networks:
+  sgu-net:
+    driver: bridge
