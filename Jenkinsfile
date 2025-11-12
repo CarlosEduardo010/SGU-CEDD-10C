@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        API_HOST = "backend"
+        API_HOST = "localhost"
         API_PORT = "8000"
         API_BASE = "/api/usuarios"
     }
@@ -57,7 +57,7 @@ pipeline {
                     echo "Probando conexión al backend (http://localhost:8000/api/usuarios)..."
                     bat 'curl -f http://localhost:8000/api/usuarios || exit /b 1'
 
-                    echo '✅ Despliegue exitoso. Accede al frontend en: http://localhost:5173'
+                    echo ' Despliegue exitoso. Accede al frontend en: http://localhost:5173'
                 }
             }
         }
@@ -65,14 +65,14 @@ pipeline {
 
     post {
         success {
-            echo '🎉 Despliegue completado exitosamente.'
+            echo ' Despliegue completado exitosamente.'
         }
         failure {
-            echo '💥 Error durante el pipeline. Revisar logs en Jenkins.'
+            echo ' Error durante el pipeline. Revisar logs en Jenkins.'
             bat 'docker-compose logs'
         }
         always {
-            echo '🧹 Limpieza final de recursos temporales.'
+            echo ' Limpieza final de recursos temporales.'
         }
     }
 }
