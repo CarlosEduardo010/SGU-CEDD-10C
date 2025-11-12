@@ -47,17 +47,14 @@ services:
       dockerfile: Dockerfile
       tags: ["client:1.0-sgu"]
       args:
-        API_HOST: backend
+        API_HOST: localhost  # <-- CAMBIAR DE 'backend' A 'localhost'
         API_PORT: 8000
         API_BASE: /api/usuarios
     ports:
       - "5173:80"
     depends_on:
       - backend
-    networks:
-      - sgu-net
-
-volumes:
+    volumes:
   sgu-volume:
 
 networks:
