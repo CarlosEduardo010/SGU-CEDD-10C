@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Base de datos (sgu-database)
+  database:
+    container_name: sgu-database
+    image: mysql:8
+    restart: always
+    environment:
+      # Estos son los valores que el servicio 'database' necesita para inicializarse
+      MYSQL_ROOT_PASSWORD: root 
+      MYSQL_DATABASE: userback 
+      MYSQL_USER: root         
+      MYSQL_PASSWORD: root     
+    volumes:
+      - sgu-volume:/var/lib/mysql 
+    networks:
+      - sgu-net 
+
+  # Servidor Back-end (sgu-backend)
+  backend:
+    container_name: sgu-backend
+    build:
+      context: ./backend 
+      dockerfile: Dockerfile
+      tags: ["server:1.0-sgu"]
+    environment:
+      # Variables que Spring Boot usa (definidas en application.properties)
+      SERVER_PORT: 8000
+      DB_HOST: database       # Apunta al nombre del servicio de la DB
+      DB_PORT: 3306
+      DB_NAME: userback
+      DB_USER: root
+      DB_PASS: root
+    ports:
+      - "8000:8000" 
+    depends_on:
+      - database
+    networks:
+      - sgu-net
+
+  # Cliente Front-end (sgu-frontend)
+  frontend:
+    container_name: sgu-frontend
+    build:
+      context: ./frontend 
+      dockerfile: Dockerfile
+      tags: ["client:1.0-sgu"]
+      # ¡IMPORTANTE! Argumentos de construcción pasados al Dockerfile del frontend
+      args:
+        API_HOST: backend       # El host de la API es el nombre del servicio backend
+        API_PORT: 8000          # El puerto del servidor backend
+        API_BASE: /api/usuarios # El segmento base de la API
+    ports:
+      - "5173:80" 
+    depends_on:
+      - backend
+    networks:
+      - sgu-net
+
+# Volúmenes y Redes
+volumes:
+  sgu-volume: 
+
+networks:
+  sgu-net: 
+    driver: bridge
