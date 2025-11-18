@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const HOST = import.meta.env.VITE_API_HOST || 'http://localhost';
-const PORT = import.meta.env.VITE_API_PORT || '8000';
-const BASE = import.meta.env.VITE_API_BASE || '/api/usuarios';
+const HOST = import.meta.env.VITE_API_HOST;
+const PORT = import.meta.env.VITE_API_PORT;
+const BASE = import.meta.env.VITE_API_BASE;
+const PROTOCOL = import.meta.env.VITE_API_PROTOCOL ;
 
 // Definición de tipos (si usas TypeScript)
 interface Usuario {
@@ -19,7 +20,7 @@ interface UsuarioRequest {
     numeroTelefono: string;
 }
 
-const API_URL = `http://${HOST}:${PORT}${BASE}`;
+const API_URL = `${PROTOCOL}://${HOST}:${PORT}${BASE}`;
 
 const CRUDUsuarios = () => {
     // 1. ESTADOS PRINCIPALES
@@ -138,14 +139,14 @@ const CRUDUsuarios = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            <h1>🚀 CRUD de Usuarios (React + Spring Boot)</h1>
+            <h1> CRUD de Usuarios (React + Spring Boot)</h1>
             
             <hr/>
             
             {/* --- Formulario de Edición (Muestra si hay un usuario seleccionado) --- */}
             {usuarioAEditar && (
                 <div style={{ border: '2px solid orange', padding: '20px', marginBottom: '40px' }}>
-                    <h2>✏️ Editando Usuario ID: {usuarioAEditar.id}</h2>
+                    <h2> Editando Usuario ID: {usuarioAEditar.id}</h2>
                     <form onSubmit={handleActualizar}>
                         <input
                             type="text"
@@ -182,7 +183,7 @@ const CRUDUsuarios = () => {
             {/* --- Formulario de Creación (Se oculta si se está editando) --- */}
             {!usuarioAEditar && (
                 <div style={{ marginBottom: '40px' }}>
-                    <h2>➕ Crear Nuevo Usuario</h2>
+                    <h2> Crear Nuevo Usuario</h2>
                     <form onSubmit={handleSubmit}>
                         <input
                             type="text"
@@ -216,7 +217,7 @@ const CRUDUsuarios = () => {
             <hr/>
 
             {/* --- Listado de Usuarios (GET) --- */}
-            <h2>📋 Lista de Usuarios</h2>
+            <h2> Lista de Usuarios</h2>
             {usuarios.length === 0 ? (
                 <p>No hay usuarios registrados.</p>
             ) : (

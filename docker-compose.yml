@@ -30,6 +30,9 @@ services:
       DB_NAME: userback
       DB_USER: root
       DB_PASS: root
+      SERVER_SSL_ENABLE: "true"
+      SERVER_SSL_CERT_PATH: /etc/letsencrypt/live/localhost/keystore.p12
+      SERVER_SSL_CERT_PASSWORD: "changeit"
     ports:
       - "8000:8000"
     depends_on:
@@ -37,6 +40,8 @@ services:
         condition: service_healthy
     networks:
       - sgu-net
+    volumes:
+      - certbot-conf:/etc/letsencrypt:ro
 
   frontend:
     container_name: sgu-frontend
@@ -49,16 +54,25 @@ services:
         API_HOST: localhost 
         API_PORT: 8000
         API_BASE: /api/usuarios
+        API_PROTOCOL: https
     ports:
-      - "5173:80"
+      - "80:80"
+      - "5173:443"
     depends_on:
       - backend
+    volumes:
+      - certbot-conf:/etc/letsencrypt:ro
     networks:
       - sgu-net
 
-volumes:
-  sgu-volume:
 
 networks:
   sgu-net:
     driver: bridge
+
+volumes:
+  sgu-volume:
+    external: true
+  certbot-conf:
+    external: true
+  
